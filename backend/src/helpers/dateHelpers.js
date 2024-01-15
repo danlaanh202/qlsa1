@@ -22,6 +22,9 @@ function getPreviousDateRange(previousNumber = 0, dateType = WEEK) {
     },
   });
   const thisStart = moment().startOf(dateType).subtract(previousNumber, dateType);
+
+  // console.log({ thisStart });
+  // console.log({ subtract: thisStart.clone().add(1, 'week') });
   return {
     currentRange: {
       fromDate: thisStart.toDate(),

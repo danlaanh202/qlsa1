@@ -8,7 +8,6 @@ class HealthRecordController {
   constructor() {}
   async create(req, res) {
     try {
-      console.log(req.body);
       const [newHealthRecord] = await Promise.all([
         HealthRecord.create(req.body),
         createActivity('tao_phieu_sieu_am'),

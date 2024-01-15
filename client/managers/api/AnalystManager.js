@@ -2,10 +2,10 @@ import { fetchAuthenticatedApi } from "../../utils/api";
 
 class AnalystManager {
   constructor() {}
-  async get(type) {
+  async get(type, ignoreCache = false) {
     return fetchAuthenticatedApi({
       method: "GET",
-      url: `/analyst/${type}`,
+      url: `/analyst/${type}?ignoreCache=${ignoreCache}`,
     });
   }
 }

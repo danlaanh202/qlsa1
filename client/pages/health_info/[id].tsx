@@ -79,6 +79,7 @@ const HealthInfoDetail = () => {
           <div>Địa chỉ: {benhNhan.dia_chi}</div>
           <div>Số CCCD: {benhNhan.can_cuoc}</div>
           <div>BS chỉ định: {bacSi.ho_va_ten}</div>
+          <div>Phí khám: {healthInfo.chi_phi} VND</div>
         </StyledCard>
         <StyledCard>
           <div className="card-title">Chẩn đoán</div>

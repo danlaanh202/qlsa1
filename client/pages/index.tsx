@@ -7,7 +7,8 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import MyChart from "../components/chart/MyChart";
 import { Button, MenuItem, Select } from "@mui/material";
 import { useEffect, useState } from "react";
-import AnalystManager from "../managers/api/AnalystManager";
+import analystManager from "../managers/api/AnalystManager";
+import { ArrowDownward } from "@mui/icons-material";
 
 const StyledContainer = styled.div`
   display: flex;
@@ -71,14 +72,42 @@ const StyledCardContainer = styled.div`
 `;
 const Dashboard = () => {
   const [dateRange, setDateRange] = useState<any>("this_week");
+  const [loading, setLoading] = useState(false);
+  const [report, setReport] = useState<any>({
+    currentHealthInfoCount: 0,
+    currentPatientCount: 0,
+    previousHealthInfoCount: 0,
+    previousPatientCount: 0,
+    currentSummary: 0,
+    previousSummary: 0,
+  });
+  const {
+    currentHealthInfoCount,
+    currentPatientCount,
+    previousHealthInfoCount,
+    previousPatientCount,
+    currentSummary,
+    previousSummary,
+  } = report;
   const getReport = async () => {
     try {
-      console.log(await AnalystManager.get(dateRange));
-    } catch (e) {}
+      setLoading(true);
+      const res = await analystManager.get(dateRange);
+      setReport(res);
+      setLoading(false);
+    } catch (e) {
+      console.log({ e });
+    } finally {
+      setLoading(false);
+    }
   };
   useEffect(() => {
     getReport();
   }, [dateRange]);
+  const downMarkup = <ArrowDownward />;
+  const upMarkup = <ArrowUpwardIcon />;
+  const getIcon = (prev: any, current: any) =>
+    prev > current ? downMarkup : upMarkup;
   return (
     <Layout>
       <Head>
@@ -96,43 +125,52 @@ const Dashboard = () => {
             <MenuItem value={"this_week"}>This week</MenuItem>
             <MenuItem value={"this_month"}>This month</MenuItem>
           </Select>
-          <Button variant="outlined">Reload</Button>
+          <Button variant="outlined" onClick={getReport}>
+            {loading ? <div className="spinner"></div> : "Reload"}
+          </Button>
         </div>
         <StyledReportContainer>
           <StyledCardContainer>
             <div className="card-item-container">
               <div className="card-item">
                 <span className="card-item-label">Số lượt siêu âm</span>
-                <ArrowUpwardIcon />
-                <span>30%</span>
+                {getIcon(previousHealthInfoCount, currentHealthInfoCount)}
+                <span>
+                  {Math.abs(currentHealthInfoCount - previousHealthInfoCount)}
+                </span>
               </div>
-              <span className="card-item-value">165</span>
+              <span className="card-item-value">{currentHealthInfoCount}</span>
             </div>
           </StyledCardContainer>
           <StyledCardContainer>
             <div className="card-item-container">
               <div className="card-item">
                 <span className="card-item-label">Doanh thu</span>
-                <ArrowUpwardIcon />
-                <span>30%</span>
+                {getIcon(previousSummary, currentSummary)}
+                <span>
+                  {Math.abs(currentSummary - previousSummary)}
+                  VND
+                </span>
               </div>
-              <span className="card-item-value">165</span>
+              <span className="card-item-value">{currentSummary} VND</span>
             </div>
           </StyledCardContainer>
           <StyledCardContainer>
             <div className="card-item-container">
               <div className="card-item">
                 <span className="card-item-label">Số bệnh nhân mới</span>
-                <ArrowUpwardIcon />
-                <span>30%</span>
+                {getIcon(previousPatientCount, currentPatientCount)}
+                <span>
+                  {Math.abs(currentPatientCount - previousPatientCount)}
+                </span>
               </div>
-              <span className="card-item-value">165</span>
+              <span className="card-item-value">{currentPatientCount}</span>
             </div>
           </StyledCardContainer>
         </StyledReportContainer>
-        <StyledCard style={{ height: "350px" }}>
+        {/* <StyledCard style={{ height: "350px" }}>
           <MyChart />
-        </StyledCard>
+        </StyledCard> */}
         <StyledCard>
           <div className="card-title">Điều hướng</div>
           <div className="navigate-container">

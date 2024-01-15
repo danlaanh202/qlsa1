@@ -53,6 +53,7 @@ const CreatePaperForm = ({
     const { url } = await uploadImage();
 
     const resp = await createPaper({ ...data, hinh_sieu_am: url });
+    reset();
   };
   const {
     previewSource,

@@ -35,6 +35,9 @@ const HealthRecord = sequelize.define('phieu_kham', {
   hinh_sieu_am: {
     type: DataTypes.TEXT,
   },
+  chi_phi: {
+    type: DataTypes.DOUBLE,
+  },
 });
 
 HealthRecord.belongsTo(Patient, {
